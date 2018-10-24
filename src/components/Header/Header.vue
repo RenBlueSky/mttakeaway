@@ -1,49 +1,54 @@
 <template>
-  <div class="header">
-    <div class="top_box">
-      <div class="iconfont arrow">&#xe602;</div>
-      <div class="search_box">
-        <span class="iconfont searchicon">&#xe696;</span>
-        <input type="text" class="search" placeholder="搜索店内商品"/>
+  <div>
+    <div class="header">
+      <div class="top_box">
+        <div class="iconfont arrow">&#xe602;</div>
+        <div class="search_box">
+          <span class="iconfont searchicon">&#xe696;</span>
+          <input type="text" class="search" placeholder="搜索店内商品"/>
+        </div>
+        <div class="collage_box">
+          <span class="collage">拼单</span>
+          <span class="iconfont point">&#xe646;</span>
+        </div>
       </div>
-      <div class="collage_box">
-        <span class="collage">拼单</span>
-        <span class="iconfont point">&#xe646;</span>
+
+      <!--背景-->
+      <div class="header_bg" :style="headerBg"></div>
+
+      <!--header中部-->
+      <div class="middle_box">
+        <div class="m_bg" :style="mBg"></div>
+        <div class="name">
+          <h3>{{poiInfo.name}}</h3>
+        </div>
+        <div class="collect_box">
+          <div class="iconfont star">&#xe603;</div>
+          <div class="collect">收藏</div>
+        </div>
+      </div>
+
+      <!--header底部-->
+      <div class="notice_wrapper">
+        <img v-if="poiInfo.discounts2" :src="poiInfo.discounts2[0].icon_url" class="notice_img"/>
+        <span v-if="poiInfo.discounts2" class="notice">{{poiInfo.discounts2[0].info}}</span>
+        <div v-if="poiInfo.discounts2" class="activity" v-on:click="showDetail">
+          <span class="activity_count">{{poiInfo.discounts2.length}}个活动</span>
+          <span class="iconfont count">&#xe647;</span>
+        </div>
       </div>
     </div>
-
-    <!--背景-->
-    <div class="header_bg" :style="headerBg"></div>
-
-    <!--header中部-->
-    <div class="middle_box">
-      <div class="m_bg" :style="mBg"></div>
-      <div class="name">
-        <h3>{{poiInfo.name}}</h3>
-      </div>
-      <div class="collect_box">
-        <div class="iconfont star">&#xe603;</div>
-        <div class="collect">收藏</div>
-      </div>
-    </div>
-
-    <!--header底部-->
-    <div class="notice_wrapper">
-      <img v-if="poiInfo.discounts2" :src="poiInfo.discounts2[0].icon_url" class="notice_img"/>
-      <span v-if="poiInfo.discounts2" class="notice">{{poiInfo.discounts2[0].info}}</span>
-      <div v-if="poiInfo.discounts2" class="activity">
-        <span class="activity_count">{{poiInfo.discounts2.length}}个活动</span>
-        <span class="iconfont count">&#xe647;</span>
-      </div>
-    </div>
+    <ActiviDetail :poiInfo="poiInfo" :isShowDetail="isShowDetail"></ActiviDetail>
   </div>
 </template>
 
 <script>
+import ActiviDetail from "../ActiviDetail/ActiviDetail"
+
 export default {
   data(){
     return {
-
+      isShowDetail:false
     }
   },
   props:{
@@ -62,6 +67,14 @@ export default {
     mBg(){
       return "background-image: url(" + this.poiInfo.pic_url + ");"
     }
+  },
+  methods:{
+    showDetail(){
+      this.isShowDetail = true
+    }
+  },
+  components:{
+    ActiviDetail
   }
 }
 </script>
@@ -211,4 +224,7 @@ export default {
   font-size:8px;
   margin-right:4px;
 }
+
+
+
 </style>
