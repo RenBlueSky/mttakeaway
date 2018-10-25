@@ -71,7 +71,7 @@ export default {
   methods:{
     showDetail(){
       this.isShowDetail = true
-    }
+    },
   },
   components:{
     ActiviDetail

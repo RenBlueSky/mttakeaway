@@ -13,17 +13,18 @@
             <i>|</i>
             <span class="takeoff">{{poiInfo.delivery_time_tip}}</span>
           </div>
-          <div class="detail_line"></div>
           <div class="give_time">
-              配送时间：{{poiInfo.shopping_time}}
+              配送时间：{{poiInfo.shipping_time}}
           </div>
           <div class="detail_activity">
-            <img :src="poiInfo.discounts2[0].icon_url" class="detail_img"/>
-            <span class="detail_ac">{{poiInfo.discounts2[0].info}}</span>
+            <p>
+                <img :src="poiInfo.discounts2[0].icon_url" class="detail_img"/>
+                <span class="detail_ac">{{poiInfo.discounts2[0].info}}</span>
+            </p>
           </div>
         </div>
-        <div class="close">
-          <span class="iconfont close">&#xe611;</span>
+        <div class="close" @click="hiddenDetail">
+          <span class="iconfont iconclose">&#xe6e7;</span>
         </div>
       </div>
     </div>
@@ -31,6 +32,11 @@
 
 <script>
 export default {
+    data(){
+        return {
+
+        }
+    },
     props:{
         poiInfo:{
             type:Object,
@@ -42,12 +48,17 @@ export default {
         }
     },
     computed:{
-    detailBg(){
-      return "background-image:url(" + this.poiInfo.poi_back_pic_url + ")"
+        detailBg(){
+            return "background-image:url(" + this.poiInfo.poi_back_pic_url + ")"
+        },
+        detailmBg(){
+            return "background-image: url(" + this.poiInfo.pic_url + ");"
+        }
     },
-    detailmBg(){
-      return "background-image: url(" + this.poiInfo.pic_url + ");"
-    }
+    methods:{
+        hiddenDetail(){
+            this.isShowDetail  = false
+        }
     }
 }
 </script>
@@ -106,12 +117,6 @@ export default {
     margin-right:20px;
 }
 
-.detail_box .detail_bg .detail_line{
-    width:90%;
-    height:1px;
-    background:#888;
-    margin-top:26px;
-}
 
 .detail_box .detail_bg .give_time{
     margin-top:10px;
@@ -120,13 +125,43 @@ export default {
 }
 
 .detail_box .detail_bg .detail_activity{
-    font-size:12px;
     margin-top:30px;
+    height:16px;
+    padding:0 20px;
 }
 
-.detail_box .detail_bg .detail_activity .detail_img{
+.detail_box .detail_bg .detail_activity p {
+    border-top:1px solid #bababc;
+    padding-top:20px;
+}
 
+.detail_box .detail_bg .detail_activity p .detail_img{
+    width:16px;
+    height:16px;
+    border-radius:2px;
+    vertical-align: middle;
 } 
+
+.detail_box .detail_bg .detail_activity p .detail_ac{
+    display:inline-block;
+    line-height:16px;
+    font-size:12px;
+} 
+
+.detail_box .close{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    position:absolute;
+    left:50%;
+    bottom:18px;
+    margin-left:-13px;
+    border:1px solid #eee;
+}
+
+.detail_box .close .iconclose{
+   font-size:21px;
+}
 </style>
 
 

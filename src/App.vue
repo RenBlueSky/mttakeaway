@@ -18,7 +18,7 @@ export default {
   },
   data(){
     return{
-      poiInfo:{}
+      poiInfo:{},
     }
   },
   created(){
@@ -26,7 +26,6 @@ export default {
       return res.json()
     }).then(resp=>{
       if(resp.code===0){
-        console.log(resp.data.poi_info)
         this.poiInfo = resp.data.poi_info
       }
     })
