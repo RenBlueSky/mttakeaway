@@ -51,24 +51,30 @@
             </li>
           </ul>
         </div>
+        <ShopCar :poiInfo="poiInfo"></ShopCar>
       </div>
   </div>
 </template>
 
 <script>
 import BScroll from "better-scroll";
+import ShopCar from "../ShopCar/ShopCar"
 
 export default {
   name: 'Goods',
   data(){
     return{
       special:{},
+      poiInfo:{},
       foods:[],
       foodHeight:[],
       MNScroll:{},
       FDScroll:{},
       scrY:0
     }
+  },
+  components:{
+    ShopCar
   },
 
   created(){
@@ -78,6 +84,7 @@ export default {
       if(resp.code===0){
         console.log(resp.data)
         console.log(resp.data.food_spu_tags)
+        this.poiInfo = resp.data.poi_info
         this.foods = resp.data.food_spu_tags
         this.special = resp.data.container_operation_source
         //滚动
