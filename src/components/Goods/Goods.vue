@@ -46,6 +46,9 @@
                       <span class="unit">/{{food.unit}}</span>
                     </p>
                   </div>
+                  <div class="num_box">
+                    <NumControl :food="item"></NumControl>
+                  </div>
                 </li>
               </ul>
             </li>
@@ -59,6 +62,7 @@
 <script>
 import BScroll from "better-scroll";
 import ShopCar from "../ShopCar/ShopCar"
+import NumControl from "../NumControl/NumControl"
 
 export default {
   name: 'Goods',
@@ -74,7 +78,8 @@ export default {
     }
   },
   components:{
-    ShopCar
+    ShopCar,
+    NumControl
   },
 
   created(){
@@ -210,6 +215,7 @@ export default {
 .foods_wrapper .foods_box .list_box .food_item{
   display:flex;
   padding:8px 10px;
+  position:relative;
 }
 
 .foods_wrapper .foods_box .list_box .food_item .icon{
@@ -270,6 +276,11 @@ export default {
   color:#999;
 }
 
+.foods_wrapper .foods_box .list_box .food_item .num_box{
+  position:absolute;
+  right:0;
+  bottom:0;
+}
 
 li{
     list-style:none;
