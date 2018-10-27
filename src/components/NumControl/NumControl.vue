@@ -1,10 +1,13 @@
 <template>
     <div class="numcontrol_wrapper">
-        <div class="delet" v-on:click.native="deletClick">
-            <span class="iconfont icondelet">&#xe636;</span>
-        </div> 
-        <div class="num">2</div>
-        <div class="add" v-on:click.native="addClick">
+        <transition name="move">
+            <div class="delet" @click="deletClick" v-if="food.count">
+                <span class="iconfont icondelet">&#xe636;</span>
+            </div> 
+        </transition>
+            <div class="num" v-if="food.count">{{food.count}}</div>
+        
+        <div class="add" @click="addClick">
             <span class="iconfont iconadd">&#xe6e7;</span>
         </div>
     </div>
@@ -12,6 +15,8 @@
 
 
 <script>
+import Vue from "vue"
+
 export default {
     name:"Num",
     props:{
@@ -25,10 +30,15 @@ export default {
     },
     methods:{
         deletClick(){
-            console.log(this.food)
+            this.food.count --
         },
         addClick(){
-            console.log(0)
+            if(this.food.count){
+                this.food.count ++
+            }else{
+                Vue.set(this.food,"count",1)
+            }
+
         }
     }
 }
@@ -52,6 +62,7 @@ export default {
 .numcontrol_wrapper .delet .icondelet{
     font-size:12px;
     color:#aaa;
+    display:inline-block;
 }
 
 .numcontrol_wrapper .add{
@@ -69,6 +80,14 @@ export default {
     text-align:center;
     vertical-align: middle;
     line-height:16px;
+}
+
+.move-enter-active,.move-leave-active{
+    transition:all 0.5s linear;
+}
+
+.move-enter,.move-leave-to{
+    transform:translateX(20px) rotate(180deg);
 }
 
 .numcontrol_wrapper .num{

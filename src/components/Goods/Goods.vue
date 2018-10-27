@@ -11,11 +11,12 @@
               </p>
             </li>
 
-            <li class="menu_item" v-for="(item,index) in foods" :key="index" :class="{'current':currentIndex===index+1}" v-on:click="chooseMenu(index+1)">
+            <li class="menu_item i" v-for="(item,index) in foods" :key="index" :class="{'current':currentIndex===index+1}" v-on:click="chooseMenu(index+1)">
               <p class='item'>
                 <img :src="item.icon" v-if="item.icon">
                 {{item.name}}
               </p>
+              <i v-if="menucount(item.spus)">{{menucount(item.spus)}}</i>
             </li>
           </ul>
         </div>
@@ -47,14 +48,14 @@
                     </p>
                   </div>
                   <div class="num_box">
-                    <NumControl :food="item"></NumControl>
+                    <NumControl :food="food"></NumControl>
                   </div>
                 </li>
               </ul>
             </li>
           </ul>
         </div>
-        <ShopCar :poiInfo="poiInfo"></ShopCar>
+        <ShopCar :poiInfo="poiInfo" :foodschangeArr="foodschangeArr"></ShopCar>
       </div>
   </div>
 </template>
@@ -107,7 +108,7 @@ export default {
     },
     initScroll(){
       this.MNScroll = new BScroll(this.$refs.menuScroll,{click: true})
-      this.FDScroll = new BScroll(this.$refs.foodScroll,{probeType:3})
+      this.FDScroll = new BScroll(this.$refs.foodScroll,{probeType:3,click:true})
       this.FDScroll.on('scroll',(scr)=>{
         this.scrY = Math.abs(scr.y)
       })
@@ -121,15 +122,20 @@ export default {
         height += foodli[i].clientHeight
         this.foodHeight.push(height)
       }
-        console.log(this.foodHeight)
     },
     chooseMenu(i){
-      console.log(i)
       let foodli = this.$refs.foodScroll.getElementsByClassName("foodli")
       let foodEle = foodli[i]
       this.FDScroll.scrollToElement(foodEle,300)
-      
-      //console.log(foodEle)
+    },
+    menucount(spus){
+      let num = 0;
+      spus.forEach((food,index)=>{
+        if(food.count>0){
+          num += food.count
+        }
+      })
+      return num
     }
   },
 
@@ -141,6 +147,17 @@ export default {
         }
       }
       return 0
+    },
+    foodschangeArr(){
+      let foodschangeArr = [];
+      this.foods.forEach((item,index)=>{
+        item.spus.forEach((food,foodi)=>{
+          if(food.count > 0){
+            foodschangeArr.push(food)
+          }
+        })
+      })
+      return foodschangeArr;
     }
   }
 }
@@ -170,6 +187,25 @@ export default {
 .foods_wrapper .menu_box .menu_item{
   padding:15px 23px 13px 10px;
   border-bottom:1px solid #e4e4e4;
+}
+
+.foods_wrapper .menu_box .menu_item.i{
+  position:relative;
+}
+
+.foods_wrapper .menu_box .menu_item i{
+  display:inline-block;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  text-align:center;
+  line-height:16px;
+  position:absolute;
+  right:2px;
+  top:10px;
+  font-size:12px;
+  color:#fff;
+  background:#f00;
 }
 
 .foods_wrapper .menu_box .menu_item .item{
