@@ -32,7 +32,7 @@
             <li class="list_box foodli" v-for="(item,index) in foods" :key="index">
               <h4 class="title">{{item.name}}</h4>
               <ul>
-                <li class="food_item" v-for="(food,foodi) in item.spus" :key="foodi">
+                <li class="food_item" v-for="(food,foodi) in item.spus" :key="foodi"  @click="showFoodDetail(food)">
                   <div class="icon" :style="headBg(food.picture)"></div>
                   <div class="content">
                     <h3 class="name">{{food.name}}</h3>
@@ -57,6 +57,7 @@
         </div>
         <ShopCar :poiInfo="poiInfo" :foodschangeArr="foodschangeArr"></ShopCar>
       </div>
+      <FoodDetail v-if="showDetail" :foodDetail="foodDetail"></FoodDetail>
   </div>
 </template>
 
@@ -64,6 +65,7 @@
 import BScroll from "better-scroll";
 import ShopCar from "../ShopCar/ShopCar"
 import NumControl from "../NumControl/NumControl"
+import FoodDetail from "../FoodDetail/FoodDetail"
 
 export default {
   name: 'Goods',
@@ -75,12 +77,15 @@ export default {
       foodHeight:[],
       MNScroll:{},
       FDScroll:{},
-      scrY:0
+      scrY:0,
+      foodDetail:{},
+      showDetail:false
     }
   },
   components:{
     ShopCar,
-    NumControl
+    NumControl,
+    FoodDetail
   },
 
   created(){
@@ -136,6 +141,11 @@ export default {
         }
       })
       return num
+    },
+    showFoodDetail(food){
+      console.log(111)
+      this.showDetail = true
+      this.foodDetail = food
     }
   },
 

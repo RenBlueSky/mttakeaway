@@ -1,7 +1,7 @@
 <template>
     <div class="shopcar_wrapper">
-        <div class="carlist_box">
-            <div class="new">新用户立减20元</div>
+        <div class="carlist_box" v-if="showCarList" :class="{'show':showCarList}">
+            <div class="new" v-if="poiInfo.discounts2[0].info">{{poiInfo.discounts2[0].info}}</div>
             <div class="clear_box">
                 <div class="pocket">1号口袋</div>
                 <div class="clear">
@@ -9,24 +9,25 @@
                     清空购物车
                 </div>
             </div>
-            <ul>
-                <li class="carlist">
+            <ul ref="carlistscr">
+                <li class="carlist" v-for="(item,index) in foodschangeArr" :key="index">
                     <div class="fooddname_box">
-                        <p class="name">脆香油条</p>
-                        <p class="unit">例</p>
+                        <p class="name">{{item.name}}</p>
+                        <p class="unit" v-if="!item.description">{{item.unit}}</p>
+                        <p class="description" v-if="!item.unit">{{item.description}}</p>
                     </div>
                     <div class="carprice">
-                        ￥6
+                        ￥{{item.min_price}}
                     </div>
                     <div class="contron_box">
-                        <NumControl></NumControl>
+                        <NumControl class="ctr"></NumControl>
                     </div>
                 </li>
             </ul>
         </div>
 
         <div class="car_box">
-            <div class="icon_box"  :class="{'active':totalnum>0}">
+            <div class="icon_box"  :class="{'active':totalnum>0}" @click="carClick">
                 <i v-if="totalnum">{{totalnum}}</i>
                 <span class="iconfont iconcar"  :class="{'active':totalnum>0}">&#xe601;</span>
             </div>
@@ -44,6 +45,7 @@
 
 <script>
 import NumControl from "../NumControl/NumControl"
+import BScroll from "better-scroll"
 
 export default {
     props:{
@@ -58,7 +60,7 @@ export default {
     },
     data(){
         return {
-
+            showCarList:false
         }
     },
     components:{
@@ -68,6 +70,7 @@ export default {
         totalprice(){
             let totalprice = 0;
             this.foodschangeArr.forEach((item,index)=>{
+                console.log(item)
                 totalprice += item.min_price*item.count
             })
             return totalprice
@@ -86,6 +89,20 @@ export default {
                 return this.poiInfo.min_price_tip
             }
         },
+    },
+    methods:{
+        carClick(){
+            if(!this.totalnum){
+                return false
+            }else{
+                this.showCarList = !this.showCarList
+                this.$nextTick(()=>{ //dom已经渲染
+                    if(!this.carScroll){
+                        this.carScroll = new BScroll(this.$refs.carlistscr,{click:true})
+                    }
+                })
+            }
+        }
     }
 }
 </script>
@@ -98,6 +115,7 @@ export default {
     width:100%;
     background:rgba(100,100,100,0.8);
     position:fixed;
+    z-index:100;
     bottom:0;
     left:0;
 }
@@ -106,9 +124,13 @@ export default {
     width:100%;
     max-height:300px;
     position:absolute;
-    top:-300px;
+    top:0;
     left:0;
-    background:#fff;
+    z-index:-100;
+}
+
+.shopcar_wrapper .carlist_box.show{
+    transform:translateY(-100%);
 }
 
 .shopcar_wrapper .carlist_box .new{
@@ -116,33 +138,42 @@ export default {
     height:30px;
     line-height:30px;
     text-align:center;
-    font-size:14px;
-    background:#ddd;
+    font-size:12px;
+    background:rgb(242, 247, 173);
 }
 
 .shopcar_wrapper .carlist_box .clear_box{
     width:100%;
     height:20px;
+    padding:4px 0;
     background:#eee;
 }
 
 .shopcar_wrapper .carlist_box .clear_box .pocket{
     float:left;
     margin-left:4px;
+    font-size:12px;
 }
 
 .shopcar_wrapper .carlist_box .clear_box .clear{
     float:right;
     margin-right:4px;
+    font-size:12px;
 }
 
 .shopcar_wrapper .carlist_box ul{
     width:100%;
+    display:inline-block;
+    overflow:hidden;
+    max-height:250px;
+    background: #fff;
 }
 
 .shopcar_wrapper .carlist_box .carlist{
     display:flex;
     padding:6px 10px;
+    position:relative;
+    border-bottom:1px solid #ddd;
 }
 
 .shopcar_wrapper .carlist_box .carlist .fooddname_box{
@@ -151,19 +182,34 @@ export default {
 
 .shopcar_wrapper .carlist_box .carlist .fooddname_box .name{
     font-size:14px;
+    margin-top:2px;
 }
 
 .shopcar_wrapper .carlist_box .carlist .fooddname_box .unit{
     font-size:12px;
     color:#999;
+    margin-top:3px;
+}
+
+.shopcar_wrapper .carlist_box .carlist .fooddname_box .description{
+    font-size:12px;
+    color:#999;
+    margin-top:3px;
 }
 
 .shopcar_wrapper .carlist_box .carlist .carprice{
     width:60px;
+    line-height:38px;
 }
 
 .shopcar_wrapper .carlist_box .carlist .contron_box{
-    width:60px;
+    width:70px;
+}
+
+.shopcar_wrapper .carlist_box .carlist .contron_box .ctr{
+    top:15px;
+    position:absolute;
+    right:10px;
 }
 
 /**/
